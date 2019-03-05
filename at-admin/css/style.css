@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500&subset=cyrillic-ext,latin-ext');
+
+header {
+    background-color: #d3d3d3;
+    min-height: 128px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 96px;
+    text-align: center;
+    letter-spacing: -1.5pt;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    font-size: 96px;
+    font-weight: 300;
+    letter-spacing: -1.5pt;
+}
+
+h2 {
+    font-size: 60px;
+    font-weight: 300;
+    letter-spacing: -0.5pt;
+}
+
+h3 {
+    font-size: 48px;
+    font-weight: 400;
+}
+
+h4 {
+    font-size: 34px;
+    font-weight: 400;
+    letter-spacing: 0.25pt;
+}
+
+h5 {
+    font-size: 24px;
+    font-weight: 400;
+}
+
+h6 {
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0.15pt;
+}
