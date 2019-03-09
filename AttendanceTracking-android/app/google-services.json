@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "293043175587",
+    "firebase_url": "https://attendancetracking-android.firebaseio.com",
+    "project_id": "attendancetracking-android",
+    "storage_bucket": "attendancetracking-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293043175587:android:7379e7260702c647",
+        "android_client_info": {
+          "package_name": "stanevich.elizaveta.attendancetracking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293043175587-s8rilhg048amrohakavrvme4ce7dbh6s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "stanevich.elizaveta.attendancetracking",
+            "certificate_hash": "287490c90ee2c5c9e9ec3f96a538585c7ca15180"
+          }
+        },
+        {
+          "client_id": "293043175587-5stav9f6l8u8s4h1jj7a1573145acper.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7FVonxqqUh0URqPpo-9Gdj7xqfCAfgwA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293043175587-5stav9f6l8u8s4h1jj7a1573145acper.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
