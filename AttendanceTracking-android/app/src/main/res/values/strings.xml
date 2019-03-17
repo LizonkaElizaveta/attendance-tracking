@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AttendanceTracking</string>
+    <string name="settings">Уведомления</string>
 </resources>

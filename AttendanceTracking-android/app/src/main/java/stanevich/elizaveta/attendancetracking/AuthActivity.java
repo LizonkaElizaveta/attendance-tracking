@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -86,8 +87,9 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(AuthActivity.this, "Регистрация успешна",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(AuthActivity.this, MainActivity.class);
                     startActivity(intent);
-                } else
-                    Toast.makeText(AuthActivity.this, "Регистрация провалена",Toast.LENGTH_SHORT).show();
+                } else{
+                    Log.d("mLog", task.getException().toString());
+                    Toast.makeText(AuthActivity.this, "Регистрация провалена",Toast.LENGTH_SHORT).show();}
             }
         });
     }
