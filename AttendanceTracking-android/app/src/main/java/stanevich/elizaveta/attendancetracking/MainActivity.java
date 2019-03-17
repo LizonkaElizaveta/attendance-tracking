@@ -4,91 +4,76 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private Button registration;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private DatabaseReference mReference;
 
-    private EditText mETemail, mETpassword;
+    FirebaseUser user = mAuth.getInstance().getCurrentUser();
+
+    FirebaseListAdapter mAdapter;
+
+    ArrayList<String> ListUserTasks;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseApp.initializeApp(this);
 
-        mAuth = FirebaseAuth.getInstance();
+        registration = findViewById(R.id.button_registration);
+        registration.setOnClickListener(this);
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null) {
+        ListUserTasks = new ArrayList<>();
 
-                } else {
-
-                }
-            }
-        };
-
-        mETemail = findViewById(R.id.et_email);
-        mETpassword = findViewById(R.id.et_password);
-        findViewById(R.id.btn_sign_in).setOnClickListener(this);
-        findViewById(R.id.btn_registration).setOnClickListener(this);
+        mReference = FirebaseDatabase.getInstance().getReference("attendancetracking-android");
 
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_notification, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btn_sign_in){
-            signin(mETemail.getText().toString(), mETpassword.getText().toString());
+        switch (v.getId()) {
+            case R.id.button_registration :
 
-        } else if (v.getId() == R.id.btn_registration){
-            registration(mETemail.getText().toString(), mETpassword.getText().toString());
+                if(true) {
+                    mReference.child(user.getUid()).child("Attendance").push().setValue("+").addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("mLog",task.isSuccessful() + "");
+                            Log.d("mLog",task.getException() + "");
 
+                        }
+                    });
+                    Toast.makeText(MainActivity.this,"Вы зарегистрированы на занятии",Toast.LENGTH_SHORT).show();
+                    registration.setBackgroundColor(getResources().getColor(R.color.ff));
+                    break;
+                }
+                else{
+                    mReference.child(user.getUid()).child("Attendance").push().setValue("X");
+                    Toast.makeText(MainActivity.this,"Ошибка сети",Toast.LENGTH_SHORT).show();
+                    registration.setBackgroundColor(getResources().getColor(R.color.f2));}
         }
-
-    }
-
-    public void signin(String email, String password){
-        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "Авторизация успешна",Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(MainActivity.this, "Авторизация провалена",Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
-    }
-
-    public void registration(String email, String password) {
-
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
-
-                    Toast.makeText(MainActivity.this, "Регистрация успешна",Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(MainActivity.this, "Регистрация провалена",Toast.LENGTH_SHORT).show();
-
-            }
-        });
     }
 }

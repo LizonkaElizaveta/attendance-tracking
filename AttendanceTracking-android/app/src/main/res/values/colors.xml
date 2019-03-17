@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#05106E</color>
     <color name="colorAccent">#bb8d54</color>
     
-    <color name="f1">#FFFFFF</color>
-    <color name="f2">#bb8d54</color>
+    <color name="f1">#ffffff</color>
+    <color name="ff">#43A047</color>
+    <color name="f2">#E53935</color>
     <color name="f3">#6d6e71</color>
 </resources>
