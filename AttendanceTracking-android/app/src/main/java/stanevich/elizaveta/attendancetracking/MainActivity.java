@@ -29,8 +29,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_registration :
-                Toast.makeText(MainActivity.this,"work",Toast.LENGTH_SHORT).show();
 
+                if(true) {
+                    Toast.makeText(MainActivity.this,"Вы зарегистрированы на занятии",Toast.LENGTH_SHORT).show();
+                    registration.setBackgroundColor(getResources().getColor(R.color.ff));
+                    break;
+                }
+                else{
+                    Toast.makeText(MainActivity.this,"Ошибка сети",Toast.LENGTH_SHORT).show();
+                    registration.setBackgroundColor(getResources().getColor(R.color.f2));}
         }
     }
 }
