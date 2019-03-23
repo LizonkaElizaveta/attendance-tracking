@@ -26,6 +26,13 @@ body, html {
     padding-left: 10px;
 }
 
+.auth-form {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+
+}
+
 #top > img {
     height: 100%;
 }
