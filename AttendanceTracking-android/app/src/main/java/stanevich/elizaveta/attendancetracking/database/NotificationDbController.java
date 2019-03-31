@@ -61,6 +61,36 @@ public class NotificationDbController {
         return fetchData(c);
     }
 
+
+    public ArrayList<NotificationModel> getUnreadData() {
+
+
+        String[] projection = {
+                DbConstants._ID,
+                DbConstants.COLUMN_NOTI_TITLE,
+                DbConstants.COLUMN_NOTI_MESSAGE,
+                DbConstants.COLUMN_NOTI_READ_STATUS,
+                DbConstants.COLUMN_NOTI_CONTENT_URL
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = DbConstants._ID + " DESC";
+        String selection = DbConstants.COLUMN_NOTI_READ_STATUS + "=?";
+        String[] selectionArgs = {mUNREAD};
+
+        Cursor c = mDb.query(
+                DbConstants.NOTIFICATION_TABLE_NAME,  // The table name to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        return fetchData(c);
+    }
+
     private ArrayList<NotificationModel> fetchData(Cursor c) {
         ArrayList<NotificationModel> ntyDataArray = new ArrayList<>();
 
