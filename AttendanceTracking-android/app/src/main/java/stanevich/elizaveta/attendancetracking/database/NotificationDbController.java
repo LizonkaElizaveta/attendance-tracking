@@ -33,5 +33,34 @@ public class NotificationDbController {
                 DbConstants.COLUMN_NAME_NULLABLE,
                 values);
     }
+    
+    public ArrayList<NotificationModel> getAllData() {
+
+
+        String[] projection = {
+                DbConstants._ID,
+                DbConstants.COLUMN_NOTI_TITLE,
+                DbConstants.COLUMN_NOTI_MESSAGE,
+                DbConstants.COLUMN_NOTI_READ_STATUS,
+                DbConstants.COLUMN_NOTI_CONTENT_URL
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = DbConstants._ID + " DESC";
+
+        Cursor c = mDb.query(
+                DbConstants.NOTIFICATION_TABLE_NAME,  // The table name to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        return fetchData(c);
+    }
+
+
 
 }
