@@ -85,6 +85,28 @@ public class NotificationDbController {
         return ntyDataArray;
     }
 
+    public void updateStatus(int itemId, boolean read) {
+
+        String readStatus = mUNREAD;
+        if (read) {
+            readStatus = mREAD;
+        }
+
+        // New value for one column
+        ContentValues values = new ContentValues();
+        values.put(DbConstants.COLUMN_NOTI_READ_STATUS, readStatus);
+
+        // Which row to update, based on the ID
+        String selection = DbConstants._ID + "=?";
+        String[] selectionArgs = {String.valueOf(itemId)};
+
+        mDb.update(
+                DbConstants.NOTIFICATION_TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+    }
+
 
 
 }
