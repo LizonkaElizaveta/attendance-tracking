@@ -99,4 +99,18 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.menus_delete_all:
+                FragmentManager manager = getSupportFragmentManager();
+                DialogUtilities dialog = DialogUtilities.newInstance(getString(R.string.notifications), getString(R.string.delete_all_notification), getString(R.string.yes), getString(R.string.no), AppConstants.BUNDLE_KEY_DELETE_ALL_NOT);
+                dialog.show(manager, AppConstants.BUNDLE_KEY_DIALOG_FRAGMENT);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

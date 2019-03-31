@@ -8,6 +8,7 @@ public class AppConstants {
     public static final String BUNDLE_KEY_YES = "yes";
     public static final String BUNDLE_KEY_NO = "no";
     public static final String BUNDLE_KEY_VIEW_ID = "view_id_tex";
+    public static final String BUNDLE_KEY_DIALOG_FRAGMENT = "dialog_fragment";
 
     // notification constants
     public static final String PREF_NOTIFICATION = "pref_notification";
