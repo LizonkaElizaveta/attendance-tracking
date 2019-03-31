@@ -107,6 +107,14 @@ public class NotificationDbController {
                 selectionArgs);
     }
 
+    // Delete All Notifications
+    public void deleteAllNot() {
+        mDb.delete(
+                DbConstants.NOTIFICATION_TABLE_NAME,
+                null,
+                null);
+    }
+
 
 
 }
