@@ -87,4 +87,16 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
         }
     }
 
+    private void initListener() {
+        // recycler list item click listener
+        mNotificationAdapter.setItemClickListener(new ListItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view) {
+                mNotificationDbController.updateStatus(mNotificationList.get(position).getId(), true);
+
+            }
+        });
+
+    }
+
 }
