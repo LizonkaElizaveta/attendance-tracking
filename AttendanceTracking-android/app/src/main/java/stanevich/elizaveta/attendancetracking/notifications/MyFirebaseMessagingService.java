@@ -1,6 +1,13 @@
 package stanevich.elizaveta.attendancetracking.notifications;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -9,6 +16,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
+import stanevich.elizaveta.attendancetracking.MainActivity;
+import stanevich.elizaveta.attendancetracking.R;
 import stanevich.elizaveta.attendancetracking.constants.AppConstants;
 import stanevich.elizaveta.attendancetracking.database.NotificationDbController;
 
@@ -28,6 +37,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             sendNotification(params.get("title"), params.get("message"), params.get("url"));
             broadcastNewNotification();
         }
+
+
     }
 
 
@@ -39,11 +50,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     private void sendNotification(String title, String messageBody, String url) {
+        Log.d("mLog", "WWWWWWWWWWWWWWWWWWWWWWWWW");
 
         // insert data into database
         NotificationDbController notificationDbController = new NotificationDbController(MyFirebaseMessagingService.this);
         notificationDbController.insertData(title, messageBody, url);
-
     }
 
     private void broadcastNewNotification() {
@@ -52,5 +63,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     }
+
+
 
 }

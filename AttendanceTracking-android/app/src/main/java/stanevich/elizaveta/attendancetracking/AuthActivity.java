@@ -1,12 +1,17 @@
 package stanevich.elizaveta.attendancetracking;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,6 +20,13 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+
+import stanevich.elizaveta.attendancetracking.constants.AppConstants;
+import stanevich.elizaveta.attendancetracking.database.NotificationDbController;
+import stanevich.elizaveta.attendancetracking.model.NotificationModel;
+import stanevich.elizaveta.attendancetracking.notifications.MyFirebaseMessagingService;
 
 
 public class AuthActivity extends AppCompatActivity implements View.OnClickListener{
@@ -49,6 +61,18 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_sign_in).setOnClickListener(this);
         findViewById(R.id.btn_registration).setOnClickListener(this);
 
+        retrieveDataFromNotification();
+
+    }
+
+    private void retrieveDataFromNotification() {
+        String title = getIntent().getStringExtra("title");
+        String message = getIntent().getStringExtra("message");
+        Log.d("mLog", title+ " " + message);
+        if(title !=null && message != null) {
+            NotificationDbController notificationDbController = new NotificationDbController(this);
+            notificationDbController.insertData(title, message, "");
+        }
     }
 
     @Override

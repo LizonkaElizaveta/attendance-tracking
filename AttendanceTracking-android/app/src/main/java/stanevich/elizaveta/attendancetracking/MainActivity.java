@@ -3,14 +3,18 @@ package stanevich.elizaveta.attendancetracking;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,17 +28,20 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import stanevich.elizaveta.attendancetracking.constants.AppConstants;
 import stanevich.elizaveta.attendancetracking.database.NotificationDbController;
+import stanevich.elizaveta.attendancetracking.listeners.ListItemClickListener;
 import stanevich.elizaveta.attendancetracking.model.NotificationModel;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button registration;
     private FirebaseAuth mAuth;
     private DatabaseReference mReference;
+    private Toolbar toolbar;
 
     FirebaseUser user = mAuth.getInstance().getCurrentUser();
 
-    FirebaseListAdapter mAdapter;
+    private RelativeLayout mNotificationView;
 
     ArrayList<String> ListUserTasks;
 
@@ -43,6 +50,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mNotificationView = (RelativeLayout) findViewById(R.id.notificationView);
+        mNotificationView.setOnClickListener(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         registration = findViewById(R.id.button_registration);
         registration.setOnClickListener(this);
@@ -51,13 +62,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mReference = FirebaseDatabase.getInstance().getReference("attendancetracking-android");
 
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_notification, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
     @Override
     public void onClick(View v) {
@@ -81,8 +88,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(MainActivity.this, "Ошибка сети", Toast.LENGTH_SHORT).show();
                     registration.setBackgroundColor(getResources().getColor(R.color.f2));
                 }
+                break;
+            case R.id.notificationView:
+                Intent intent = new Intent(this,NotificationListActivity.class);
+                startActivity(intent);
+                break;
         }
     }
+
 
     private BroadcastReceiver newNotificationReceiver = new BroadcastReceiver() {
 
@@ -91,6 +104,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             initNotification();
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("mLog", "OnResume");
+//register broadcast receiver
+        IntentFilter intentFilter = new IntentFilter(AppConstants.NEW_NOTI);
+        LocalBroadcastManager.getInstance(this).registerReceiver(newNotificationReceiver, intentFilter);
+
+        initNotification();
+
+    }
 
     public void initNotification() {
         NotificationDbController notificationDbController = new NotificationDbController(this);
@@ -108,5 +133,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 notificationCount.setVisibility(View.INVISIBLE);
             }
         }
+
+
     }
+
+
 }

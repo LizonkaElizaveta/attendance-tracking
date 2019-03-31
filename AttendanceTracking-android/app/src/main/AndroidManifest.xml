@@ -13,7 +13,11 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".NotificationActivity"/>
+        <activity
+            android:name=".NotificationListActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".BaseActivity" />
         <activity android:name=".AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +27,7 @@
         </activity>
 
         <service android:name=".notifications.MyFirebaseMessagingService"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
