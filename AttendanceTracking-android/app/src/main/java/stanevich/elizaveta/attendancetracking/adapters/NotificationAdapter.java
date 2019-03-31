@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import stanevich.elizaveta.attendancetracking.R;
+import stanevich.elizaveta.attendancetracking.listeners.ListItemClickListener;
 import stanevich.elizaveta.attendancetracking.model.NotificationModel;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
