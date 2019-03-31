@@ -41,7 +41,7 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
 
         initVar();
         initView();
-        initFunctionality();
+
         initListener();
     }
 
@@ -111,6 +111,35 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
                 dialog.show(manager, AppConstants.BUNDLE_KEY_DIALOG_FRAGMENT);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_delete_all, menu);
+        mMenuItemDeleteAll = menu.findItem(R.id.menus_delete_all);
+
+        updateUI();
+
+        return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mNotificationAdapter != null) {
+            updateUI();
+        }
+    }
+
+    @Override
+    public void onComplete(Boolean isOkPressed, String viewIdText) {
+        if (isOkPressed) {
+            if (viewIdText.equals(AppConstants.BUNDLE_KEY_DELETE_ALL_NOT)) {
+                mNotificationDbController.deleteAllNot();
+                updateUI();
+            }
+        }
     }
 
 }
