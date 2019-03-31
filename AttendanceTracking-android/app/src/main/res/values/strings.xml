@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">AttendanceTracking</string>
     <string name="settings">Уведомления</string>
+    <string name="title_post">Уведомление</string>
+    <string name="read_post">Нажмите для прочтения</string>
+    <string name="site_menu_delete_all">Удалить все</string>
+    <string name="notifications">Уведомления</string>
+    <string name="delete_all_notification">Удалить все уведомления?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="exit">Выход</string>
 </resources>
