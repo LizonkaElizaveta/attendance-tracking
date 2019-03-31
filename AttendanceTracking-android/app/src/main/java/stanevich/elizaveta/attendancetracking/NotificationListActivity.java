@@ -63,4 +63,28 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
         enableUpButton();
     }
 
+    private void updateUI() {
+        showLoader();
+
+        if (mNotificationDbController == null) {
+            mNotificationDbController = new NotificationDbController(mContext);
+        }
+        mNotificationList.clear();
+        mNotificationList.addAll(mNotificationDbController.getAllData());
+        mNotificationAdapter.notifyDataSetChanged();
+
+        hideLoader();
+
+        if (mNotificationList.size() == 0) {
+            showEmptyView();
+            if (mMenuItemDeleteAll != null) {
+                mMenuItemDeleteAll.setVisible(false);
+            }
+        } else {
+            if (mMenuItemDeleteAll != null) {
+                mMenuItemDeleteAll.setVisible(true);
+            }
+        }
+    }
+
 }
