@@ -33,7 +33,7 @@ public class NotificationDbController {
                 DbConstants.COLUMN_NAME_NULLABLE,
                 values);
     }
-    
+
     public ArrayList<NotificationModel> getAllData() {
 
 
@@ -59,6 +59,30 @@ public class NotificationDbController {
         );
 
         return fetchData(c);
+    }
+
+    private ArrayList<NotificationModel> fetchData(Cursor c) {
+        ArrayList<NotificationModel> ntyDataArray = new ArrayList<>();
+
+        if (c != null) {
+            if (c.moveToFirst()) {
+                do {
+                    // get  the  data into array,or class variable
+                    int itemId = c.getInt(c.getColumnIndexOrThrow(DbConstants._ID));
+                    String title = c.getString(c.getColumnIndexOrThrow(DbConstants.COLUMN_NOTI_TITLE));
+                    String message = c.getString(c.getColumnIndexOrThrow(DbConstants.COLUMN_NOTI_MESSAGE));
+                    String status = c.getString(c.getColumnIndexOrThrow(DbConstants.COLUMN_NOTI_READ_STATUS));
+                    String contentUrl = c.getString(c.getColumnIndexOrThrow(DbConstants.COLUMN_NOTI_CONTENT_URL));
+
+                    boolean isUnread = !status.equals(mREAD);
+
+                    // wrap up data list and return
+                    ntyDataArray.add(new NotificationModel(itemId, title, message, isUnread, contentUrl));
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+        return ntyDataArray;
     }
 
 
