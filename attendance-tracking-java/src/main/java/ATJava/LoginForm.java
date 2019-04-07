@@ -41,7 +41,7 @@ public class LoginForm extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
+
         dispose();
     }
 

@@ -5,7 +5,10 @@ public class Main {
         LoginForm dialog = new LoginForm();
         dialog.pack();
         dialog.setVisible(true);
-        System.exit(0);
+        //MainForm dialog = new MainForm();
+        //dialog.pack();
+        //dialog.setVisible(true);
+        //System.exit(0);
     }
 
 
