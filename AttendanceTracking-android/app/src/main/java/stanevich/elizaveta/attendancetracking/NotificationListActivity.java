@@ -52,7 +52,7 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
         setContentView(R.layout.activity_notification);
 
         mRecycler = (RecyclerView) findViewById(R.id.rv_recycler);
-        mNotificationAdapter = new NotificationAdapter(mActivity, mNotificationList);
+        mNotificationAdapter = new NotificationAdapter(mNotificationList);
         mRecycler.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecycler.setAdapter(mNotificationAdapter);
 

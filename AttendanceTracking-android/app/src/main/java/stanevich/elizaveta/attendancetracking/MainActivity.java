@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -113,6 +113,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Toast.makeText(MainActivity.this, "Вы зарегистрированы на занятии", Toast.LENGTH_SHORT).show();
                     registration.setBackgroundColor(getResources().getColor(R.color.ff));
                 } else {
+                    registration.setBackgroundColor(getResources().getColor(R.color.f2));
                     Toast.makeText(MainActivity.this, "Вы не зарегистрированы на занятии, ваше местоположение не соответствует аудитории", Toast.LENGTH_SHORT).show();
                 }
             }
