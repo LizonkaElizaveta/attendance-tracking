@@ -116,7 +116,6 @@ public class NotificationDbController {
     }
 
     public void updateStatus(int itemId, boolean read) {
-
         String readStatus = mUNREAD;
         if (read) {
             readStatus = mREAD;
