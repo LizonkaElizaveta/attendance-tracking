@@ -61,8 +61,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ListUserTasks = new ArrayList<>();
 
         mReference = FirebaseDatabase.getInstance().getReference("attendancetracking-android");
-
-
     }
 
 
@@ -150,21 +148,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         if (notiArrayList != null && !notiArrayList.isEmpty()) {
             int totalUnread = notiArrayList.size();
-            if (totalUnread > 0) {
-                notificationCount.setVisibility(View.VISIBLE);
-                notificationCount.setText(String.valueOf(totalUnread));
-            } else {
-                notificationCount.setVisibility(View.INVISIBLE);
-            }
+            notificationCount.setVisibility(View.VISIBLE);
+            notificationCount.setText(String.valueOf(totalUnread));
+        } else {
+            notificationCount.setVisibility(View.INVISIBLE);
         }
-
-
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
         switch (requestCode) {
             case GPS_ACCESS_REQUEST:
                 checkIsStudentPresent();
