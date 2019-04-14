@@ -1,6 +1,5 @@
 package stanevich.elizaveta.attendancetracking.adapters;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,13 +16,10 @@ import stanevich.elizaveta.attendancetracking.model.NotificationModel;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
-    private Context mContext;
-
     private ArrayList<NotificationModel> mNotificationList;
     private ListItemClickListener mItemClickListener;
 
-    public NotificationAdapter(Context mContext, ArrayList<NotificationModel> mNotificationList) {
-        this.mContext = mContext;
+    public NotificationAdapter(ArrayList<NotificationModel> mNotificationList) {
         this.mNotificationList = mNotificationList;
     }
 
