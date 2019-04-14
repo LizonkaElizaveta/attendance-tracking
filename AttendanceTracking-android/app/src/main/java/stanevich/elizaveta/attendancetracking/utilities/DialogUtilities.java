@@ -46,7 +46,6 @@ public class DialogUtilities extends DialogFragment {
         } catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString());
         }
-
     }
 
     @Override
@@ -72,7 +71,6 @@ public class DialogUtilities extends DialogFragment {
                         if (dialogInterface != null) {
                             mListener.onComplete(false, viewIdText);
                         }
-
                     }
                 })
                 .create();

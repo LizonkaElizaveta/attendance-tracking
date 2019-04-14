@@ -28,7 +28,6 @@ public class NotificationModel {
         return message;
     }
 
-
     public String getUrl() {
         return url;
     }

@@ -3,5 +3,5 @@ package stanevich.elizaveta.attendancetracking.listeners;
 import android.view.View;
 
 public interface ListItemClickListener {
-    public void onItemClick(int position, View view);
+    void onItemClick(int position, View view);
 }

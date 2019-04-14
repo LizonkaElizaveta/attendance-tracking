@@ -4,21 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,8 +27,11 @@ import java.util.ArrayList;
 
 import stanevich.elizaveta.attendancetracking.constants.AppConstants;
 import stanevich.elizaveta.attendancetracking.database.NotificationDbController;
-import stanevich.elizaveta.attendancetracking.listeners.ListItemClickListener;
 import stanevich.elizaveta.attendancetracking.model.NotificationModel;
+import stanevich.elizaveta.attendancetracking.services.GPSService;
+import stanevich.elizaveta.attendancetracking.services.OnLocationChanged;
+
+import static stanevich.elizaveta.attendancetracking.services.GPSService.GPS_ACCESS_REQUEST;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button registration;
@@ -61,8 +61,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ListUserTasks = new ArrayList<>();
 
         mReference = FirebaseDatabase.getInstance().getReference("attendancetracking-android");
-
-
     }
 
 
@@ -72,16 +70,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.button_registration:
 
                 if (true) {
-                    mReference.child(user.getUid()).child("Attendance").push().setValue("+").addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.d("mLog", task.isSuccessful() + "");
-                            Log.d("mLog", task.getException() + "");
 
-                        }
-                    });
-                    Toast.makeText(MainActivity.this, "Вы зарегистрированы на занятии", Toast.LENGTH_SHORT).show();
-                    registration.setBackgroundColor(getResources().getColor(R.color.ff));
+                    GPSService.requestGpsPermissions(MainActivity.this);
+
+                    checkIsStudentPresent();
+
                     break;
                 } else {
                     mReference.child(user.getUid()).child("Attendance").push().setValue("X");
@@ -90,10 +83,39 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.notificationView:
-                Intent intent = new Intent(this,NotificationListActivity.class);
+                Intent intent = new Intent(this, NotificationListActivity.class);
                 startActivity(intent);
                 break;
         }
+    }
+
+    public void checkIsStudentPresent() {
+        final GPSService gpsService = GPSService.getInstance(MainActivity.this);
+        gpsService.locationChanged(new OnLocationChanged() {
+            @Override
+            public void changed(Location location) {
+                gpsService.removeUpdates();
+                Location roomLocation = new Location("ATProvider");
+                roomLocation.setLatitude(59.998947);
+                roomLocation.setLongitude(30.207399);
+                final float accuracyMeters = 50.0f;
+                if (location.distanceTo(roomLocation) < accuracyMeters) {
+                    mReference.child(user.getUid()).child("Attendance").push().setValue("+").addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("mLog", task.isSuccessful() + "");
+                            Log.d("mLog", task.getException() + "");
+                        }
+                    });
+
+                    Toast.makeText(MainActivity.this, "Вы зарегистрированы на занятии", Toast.LENGTH_SHORT).show();
+                    registration.setBackgroundColor(getResources().getColor(R.color.ff));
+                } else {
+                    registration.setBackgroundColor(getResources().getColor(R.color.f2));
+                    Toast.makeText(MainActivity.this, "Вы не зарегистрированы на занятии, ваше местоположение не соответствует аудитории", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 
@@ -126,16 +148,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         if (notiArrayList != null && !notiArrayList.isEmpty()) {
             int totalUnread = notiArrayList.size();
-            if (totalUnread > 0) {
-                notificationCount.setVisibility(View.VISIBLE);
-                notificationCount.setText(String.valueOf(totalUnread));
-            } else {
-                notificationCount.setVisibility(View.INVISIBLE);
-            }
+            notificationCount.setVisibility(View.VISIBLE);
+            notificationCount.setText(String.valueOf(totalUnread));
+        } else {
+            notificationCount.setVisibility(View.INVISIBLE);
         }
-
-
     }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case GPS_ACCESS_REQUEST:
+                checkIsStudentPresent();
+                break;
+        }
+    }
 }

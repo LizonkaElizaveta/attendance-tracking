@@ -52,7 +52,7 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
         setContentView(R.layout.activity_notification);
 
         mRecycler = (RecyclerView) findViewById(R.id.rv_recycler);
-        mNotificationAdapter = new NotificationAdapter(mActivity, mNotificationList);
+        mNotificationAdapter = new NotificationAdapter(mNotificationList);
         mRecycler.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecycler.setAdapter(mNotificationAdapter);
 
@@ -74,15 +74,13 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
 
         hideLoader();
 
-        if (mNotificationList.size() == 0) {
+        boolean notificationListEmpty = mNotificationList.isEmpty();
+        if (notificationListEmpty) {
             showEmptyView();
-            if (mMenuItemDeleteAll != null) {
-                mMenuItemDeleteAll.setVisible(false);
-            }
-        } else {
-            if (mMenuItemDeleteAll != null) {
-                mMenuItemDeleteAll.setVisible(true);
-            }
+        }
+
+        if (mMenuItemDeleteAll != null) {
+            mMenuItemDeleteAll.setVisible(!notificationListEmpty);
         }
     }
 
@@ -95,8 +93,6 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
 
             }
         });
-
-
     }
 
     @Override
@@ -141,5 +137,4 @@ public class NotificationListActivity extends BaseActivity implements DialogUtil
             }
         }
     }
-
 }
