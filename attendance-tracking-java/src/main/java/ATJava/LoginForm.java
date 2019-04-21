@@ -1,6 +1,7 @@
 package ATJava;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class LoginForm extends JDialog {
@@ -49,4 +50,5 @@ public class LoginForm extends JDialog {
         // add your code here if necessary
         dispose();
     }
+
 }
