@@ -3,6 +3,7 @@ package ATJava;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
 
@@ -27,6 +28,7 @@ public class MainForm extends JFrame {
     private JPanel dataPane;
     private JPanel changeReportPane;
     private JLabel dbStatus;
+    private FirebaseAuth mAuth;
 
     public MainForm() {
         super("Main form");
@@ -56,6 +58,10 @@ public class MainForm extends JFrame {
                 onPress();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        makeAuth();
 
         try {
             FileInputStream serviceAccount =
@@ -114,5 +120,23 @@ public class MainForm extends JFrame {
     private void onPress() {
 
     }
+
+    private int makeAuth() {
+        int status = 5;
+        PswDialogResponse AuthData;
+
+        setFocusable(false);
+        setEnabled(false);
+
+        LoginForm dialog = new LoginForm();
+        dialog.pack();
+        dialog.setVisible(true);
+
+
+        setFocusable(true);
+        setEnabled(true);
+        return status;
+    }
+
 
 }
