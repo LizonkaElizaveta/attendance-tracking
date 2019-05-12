@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "attendancetracking-android",
+  "private_key_id": "126278703234661b45822b5031e4de9893f88eb3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCyisWMPzeZDygs\nOOE2Dl1Rg8+S4eFfROsV8GPrCw909pDnOLFQbEaiNOwEdqi5wpIa7aJ83T7e3kYu\nfZujlP9iXg5r/lJGG5ObEflO5MCT8PycsITE8u0PDN6B58Gxa5g9u+jTTnoHpWQQ\n8PELXIvyZg6H9GFDA6asyIklLG4opqUo3P/rKb8njfOnCt5FeOJ6JALpEkge08Mo\ngIJ/aXgfup+34SgyIv9nZGI5GfRfiWYEsvLhm+Ld7Xk1kuU5iXy2Tm8MSjG+fm9+\nOiZ6eskq2IqS5FSmpr8SWtovvuhz6xcgUQylQbjmjIZAFYeP3G4q21CBf5fbyubc\nPGgtS6o3AgMBAAECggEACnci7D0aY7DlQG5XGSWPZ8NLrAbsgHqYMxGDsdfUoJ0B\nUmRa1GV8YG6stPhFnJngmY57W0lWsZai03/OWzDVJW1w9/iQ1wYvyUOs8uhqt2FF\nVWPtbGP27E5rTn8Itf8iDeBRXe14LrGNo4aUAn/6vgsoZ+S1vMlegDtC+rhXfq9o\ntad4+Izvnqf9dfB9znAquF5tK3g55/uYZOl7E0OnAPq7P0sjvC3fqzIBON1mIdZx\nEV1jpMl5xznfy1Ntm4iP8VWH8QQPGgpbAkv47+l+cUomQmJAyKnQzAoT+9Fpmy42\ntBM1swyRjft9jkGQFhYv/78eUgV3tNFXUWREiCFlhQKBgQDyNvzr6pdAFrFKwCCq\nmuJn6nll9rvDeW5y8UtHR8LUAzl1qpKKYBZcV4QB5TgtQO0w2kNgBQGEkOmx1IC6\nvw3PKfP0ykgXvkLeM0A8bVlnB+XLgx2+ycP81KwpJUxjE5W+6au1A5SKHDj81imW\n8YI1V1c4ujqZmlPlS3BS4Da5EwKBgQC8tBZZPYV07isOACQ6vCY+0MO76HtpeeEb\nROkx+KkOOk+Ae7RxBEoF6zZqMvyZ0k0+rMmr1xjhmk7IEMmZRWR9EvghhdCleR8k\nW83h7cfT+SAGf4f/qRDo+ASW/cJcjX6Rzhet6fa2u9y/T0Hqtf3aM2/2g/F6MDOo\nHk2JqZVyzQKBgQDFB4QAaKk2of8AXn90KF/pxiuQjP+6CAqXh78DsdVDX4gbNnDU\nDUvDPBGO9SYYcctARRwvfIL6kmL3nHRG9OlHzsm7I903Kzb7x1cGkLD8BcmhHfxR\nWZGLFnkhU0zq/2B9l1ls+weWvVSCH7hfKAASYgT6iUrn7kk2qYIqeGcrbwKBgQCm\nJY3z3wYtcTI5boh3qoemERv1y/k1YlmAMAl+tSjsXQz43HKAe71NPs83bFMagJ8A\nixQ6F/ZRVRL+dkF6kS2sLlKI+ZA+0clIswgwX7LtAVFgR1OQF+TKqu0noKBL601A\nxYv11aUjOX9gdkFcjgbH4zg2fe/UnLIu2Rd+GPF8FQKBgFyEdvz6bzQTKKDTmwGi\nmj9hTF0ujL4TbuWvueFqEKOu4EU85r8uZ6CC8KOeiTCVQGlpJWg8r5WwtsaPTVuL\nrdLpC/u6mucmPvAXcXS2v2zdMqIpU810mDsagb+bWEzTqt71fgP6sBlLmRRW0oAJ\nFBSAH2af/U7xgxPYeFkhyXFF\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-8ev5y@attendancetracking-android.iam.gserviceaccount.com",
+  "client_id": "109040724516062664490",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-8ev5y%40attendancetracking-android.iam.gserviceaccount.com"
+}
