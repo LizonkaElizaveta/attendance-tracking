@@ -9,6 +9,11 @@ public class PswDialogResponse {
         password = Password;
     }
 
+    public PswDialogResponse() {
+        email = "";
+        password = "";
+    }
+
     public PswDialogResponse(PswDialogResponse firstResponse) {
         email = firstResponse.email;
         password = firstResponse.password;

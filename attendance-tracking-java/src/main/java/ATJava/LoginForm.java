@@ -9,10 +9,8 @@ import java.awt.event.*;
 public class LoginForm extends JDialog {
     private JPanel contentPane;
     private JButton loginButton;
-    private JButton cancelButton;
     private JTextField loginField;
     private JPasswordField passwordField;
-    private JButton regButton;
     private JLabel Pict;
     private JLabel stateLabel;
     private PswDialogResponse authdata;
@@ -27,7 +25,10 @@ public class LoginForm extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(loginButton);
-
+        loginButton.setEnabled(false);
+        loginField.setEnabled(false);
+        passwordField.setEnabled(false);
+        ErrorSet(7);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
@@ -48,6 +49,8 @@ public class LoginForm extends JDialog {
                 onExit();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        authdata = new PswDialogResponse();
     }
 
     private void onOK() {
@@ -83,9 +86,19 @@ public class LoginForm extends JDialog {
             case 4: errmsg = "Логин слишком короткий"; break;
             case 5: errmsg = "Пароль или логин слишком длинный"; break;
             case 6: errmsg = "Неверные логин или пароль"; break;
+            case 7: errmsg = "Подключение к базе данных..."; break;
+            case 8: errmsg = "Введите логин и пароль"; break;
             default:errmsg = "Неизвестная ошибка"; break;
         }
         stateLabel.setText(errmsg);
+    }
+
+    public void loginSet (String Login) {
+        loginField.setText(Login);
+        loginButton.setEnabled(true);
+        loginField.setEnabled(true);
+        passwordField.setEnabled(true);
+        ErrorSet(8);
     }
 
     public PswDialogResponse GetResponse() {

@@ -13,6 +13,8 @@ import java.awt.event.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 
@@ -28,7 +30,10 @@ public class MainForm extends JFrame {
     private JPanel dataPane;
     private JPanel changeReportPane;
     private JLabel dbStatus;
-    private FirebaseAuth mAuth;
+
+    private PswDialogResponse AuthData;
+    private PswDialogResponse AuthDB;
+    private LoginForm dialog = new LoginForm();
 
     public MainForm() {
         super("Main form");
@@ -59,10 +64,6 @@ public class MainForm extends JFrame {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        mAuth = FirebaseAuth.getInstance();
-
-        makeAuth();
-
         try {
             FileInputStream serviceAccount =
                     new FileInputStream("attendancetracking_android_firebase.json");
@@ -74,10 +75,29 @@ public class MainForm extends JFrame {
         }catch (FileNotFoundException fnfExc) {}
         catch (IOException ioExc) {}
 
-
-
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("attendancetracking-android");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                AuthDB = new PswDialogResponse(dataSnapshot.child("Username").getValue().toString(), dataSnapshot.child("Password").getValue().toString());
+                dialog.loginSet(AuthDB.getEmail());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        while (makeAuth(ref));
+
+        if (!AuthDB.getEmail().equals(AuthData.getEmail())) {
+            Map<String, Object> nameUpdates = new HashMap<>();
+            nameUpdates.put("Username", AuthData.getEmail());
+            ref.updateChildrenAsync(nameUpdates);
+
+
+        }
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -97,10 +117,7 @@ public class MainForm extends JFrame {
                     }
 
                 }
-
                 allTable.setModel(dtm);
-
-
             }
 
             @Override
@@ -118,20 +135,22 @@ public class MainForm extends JFrame {
     }
 
     private void onPress() {
-
+        System.exit(0);
     }
 
-    private int makeAuth() {
-        int status = 5;
-        PswDialogResponse AuthData;
+    private boolean makeAuth(DatabaseReference ref) {
+        boolean status = true;
 
         setFocusable(false);
         setEnabled(false);
 
-        LoginForm dialog = new LoginForm();
+
         dialog.pack();
         dialog.setVisible(true);
-
+        AuthData = new PswDialogResponse(dialog.GetResponse());
+        if (AuthDB.getPassword().equals(AuthData.getPassword())) status = false;
+        System.out.println(AuthDB.getPassword());
+        System.out.println(AuthData.getPassword());
 
         setFocusable(true);
         setEnabled(true);
