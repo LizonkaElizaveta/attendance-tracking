@@ -68,7 +68,7 @@ public class LoginForm extends JDialog {
         System.exit(0);
     }
 
-    private int isCorrect() {
+    public int isCorrect() {
         int errcode=0;
         if (loginField.getText().isEmpty() || passwordField.getText().isEmpty()) errcode = 2;
             else if (passwordField.getText().length() < PswPoliticMinLength) errcode = 3;
@@ -78,7 +78,7 @@ public class LoginForm extends JDialog {
         return errcode;
     }
 
-    private void ErrorSet (int errcode) {
+    public String ErrorSet (int errcode) {
         String errmsg = "";
         switch (errcode) {
             case 2: errmsg = "Логин или пароль не введены"; break;
@@ -91,14 +91,16 @@ public class LoginForm extends JDialog {
             default:errmsg = "Неизвестная ошибка"; break;
         }
         stateLabel.setText(errmsg);
+        return errmsg;
     }
 
-    public void loginSet (String Login) {
+    public int loginSet (String Login) {
         loginField.setText(Login);
         loginButton.setEnabled(true);
         loginField.setEnabled(true);
         passwordField.setEnabled(true);
         ErrorSet(8);
+        return 8;
     }
 
     public PswDialogResponse GetResponse() {

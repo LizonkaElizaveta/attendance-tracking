@@ -64,41 +64,12 @@ public class MainForm extends JFrame {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        try {
-            FileInputStream serviceAccount =
-                    new FileInputStream("attendancetracking_android_firebase.json");
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://attendancetracking-android.firebaseio.com")
-                    .build();
-            FirebaseApp.initializeApp(options);
-        }catch (FileNotFoundException fnfExc) {}
-        catch (IOException ioExc) {}
-
+        dataAcessInitialization();
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("attendancetracking-android");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                AuthDB = new PswDialogResponse(dataSnapshot.child("Username").getValue().toString(), dataSnapshot.child("Password").getValue().toString());
-                dialog.loginSet(AuthDB.getEmail());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
+        loginFormDatainitializing(ref);
         while (makeAuth(ref));
-
-        if (!AuthDB.getEmail().equals(AuthData.getEmail())) {
-            Map<String, Object> nameUpdates = new HashMap<>();
-            nameUpdates.put("Username", AuthData.getEmail());
-            ref.updateChildrenAsync(nameUpdates);
-
-
-        }
-
+        userNameUpdate(ref);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -115,7 +86,6 @@ public class MainForm extends JFrame {
                         dtm.addRow(rowVect);
                         System.out.print(dtm);
                     }
-
                 }
                 allTable.setModel(dtm);
             }
@@ -123,22 +93,14 @@ public class MainForm extends JFrame {
             @Override
             public void onCancelled(DatabaseError error) {
             }
-
-
         });
-
-
-
-
-
-
     }
 
     private void onPress() {
         System.exit(0);
     }
 
-    private boolean makeAuth(DatabaseReference ref) {
+    public boolean makeAuth(DatabaseReference ref) {
         boolean status = true;
 
         setFocusable(false);
@@ -149,12 +111,47 @@ public class MainForm extends JFrame {
         dialog.setVisible(true);
         AuthData = new PswDialogResponse(dialog.GetResponse());
         if (AuthDB.getPassword().equals(AuthData.getPassword())) status = false;
-        System.out.println(AuthDB.getPassword());
-        System.out.println(AuthData.getPassword());
-
         setFocusable(true);
         setEnabled(true);
         return status;
+    }
+
+    public DatabaseReference dataAcessInitialization() {
+        try {
+            FileInputStream serviceAccount =
+                    new FileInputStream("attendancetracking_android_firebase.json");
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://attendancetracking-android.firebaseio.com")
+                    .build();
+            FirebaseApp.initializeApp(options);
+        }catch (FileNotFoundException fnfExc) {}
+        catch (IOException ioExc) {}
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("attendancetracking-android");
+        return ref;
+    }
+
+    private void loginFormDatainitializing(DatabaseReference rfr) {
+        rfr.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                AuthDB = new PswDialogResponse(dataSnapshot.child("Username").getValue().toString(), dataSnapshot.child("Password").getValue().toString());
+                dialog.loginSet(AuthDB.getEmail());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void userNameUpdate (DatabaseReference rfr) {
+        if (!AuthDB.getEmail().equals(AuthData.getEmail())) {
+            Map<String, Object> nameUpdates = new HashMap<>();
+            nameUpdates.put("Username", AuthData.getEmail());
+            rfr.updateChildrenAsync(nameUpdates);
+        }
     }
 
 

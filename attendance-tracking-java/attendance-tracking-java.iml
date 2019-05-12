@@ -37,5 +37,6 @@
     <orderEntry type="library" name="Spring Webflow-2.4.0" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-admin:6.8.0" level="project" />
     <orderEntry type="library" name="com.firebase.client:firebase-client-jvm:1.0.7" level="project" />
+    <orderEntry type="library" name="junit:junit:4.10" level="project" />
   </component>
 </module>
