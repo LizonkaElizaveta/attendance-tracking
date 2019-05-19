@@ -22,10 +22,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import stanevich.elizaveta.attendancetracking.constants.AppConstants;
 import stanevich.elizaveta.attendancetracking.database.NotificationDbController;
@@ -44,6 +48,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private SQLite mSQLite;
     SQLiteDatabase mSQLiteDatabase;
+    private Map<String, Map> mClassesMap;
 
     FirebaseUser user = mAuth.getInstance().getCurrentUser();
 
@@ -109,25 +114,52 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 roomLocation.setLongitude(30.207399);
                 final float accuracyMeters = 50.0f;
                 if (location.distanceTo(roomLocation) < accuracyMeters) {
-                    Cursor cursor = mSQLiteDatabase.query(SQLite.TABLE_NAME,
+                    final Cursor cursor = mSQLiteDatabase.query(SQLite.TABLE_NAME,
                             null, null, null, null, null, null);
                     if (cursor.moveToFirst()) {
-                        int surnameIndex = cursor.getColumnIndex(SQLite.STUDENT_SURNAME);
-                        int groupIndex = cursor.getColumnIndex(SQLite.STUDENT_GROUP);
+                        final int surnameIndex = cursor.getColumnIndex(SQLite.STUDENT_SURNAME);
+                        final int groupIndex = cursor.getColumnIndex(SQLite.STUDENT_GROUP);
 
-                        mReference.child("Classes").child("1").child("groups").
-                                child(cursor.getString(groupIndex)).child(user.getUid()).setValue(cursor.getString(surnameIndex)).
-                                addOnCompleteListener(new OnCompleteListener<Void>() {
+                        mReference.addValueEventListener(new ValueEventListener() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Log.d("mLog", task.isSuccessful() + "");
-                                Log.d("mLog", task.getException() + "");
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                //GenericTypeIndicator<Map> t = new GenericTypeIndicator<Map<String, Map>>() {};
+                                // mClassesMap = dataSnapshot.child("Classes").getValue(t);
+                                Map<String, Map> res = (Map<String, Map>) dataSnapshot.child("Classes").getValue();
+                                if (res == null) return;
+
+                                for (String key : res.keySet()) {
+                                    Map map = res.get(key);
+                                    if (map != null && map.containsKey("tracking")) {
+                                        if ("true".equals(map.get("tracking"))) {
+                                            mReference.child("Classes").child(key).child("groups").
+                                                    child(cursor.getString(groupIndex)).child(user.getUid()).setValue(cursor.getString(surnameIndex)).
+                                                    addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Toast.makeText(MainActivity.this, "Вы зарегистрированы на занятии", Toast.LENGTH_SHORT).show();
+                                                            registration.setBackgroundColor(getResources().getColor(R.color.ff));
+                                                            registration.setEnabled(false);
+                                                            Log.d("mLog", task.isSuccessful() + "");
+                                                            Log.d("mLog", task.getException() + "");
+                                                        }
+
+                                                    });
+                                            //found
+                                            // break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                             }
                         });
 
-                        Toast.makeText(MainActivity.this, "Вы зарегистрированы на занятии", Toast.LENGTH_SHORT).show();
-                        registration.setBackgroundColor(getResources().getColor(R.color.ff));
-                        registration.setEnabled(false);
+
                     }
                 } else {
                     registration.setBackgroundColor(getResources().getColor(R.color.f2));
