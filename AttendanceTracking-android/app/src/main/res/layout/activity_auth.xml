@@ -32,10 +32,32 @@
         android:hint="Password"
         android:textSize="30dp" />
 
+    <EditText
+        android:id="@+id/et_surname"
+        android:layout_width="@dimen/authTextWidth"
+        android:layout_height="@dimen/authTextHeight"
+        android:layout_below="@id/et_password"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/f3"
+        android:textColorHint="@color/f3"
+        android:hint="ФИО"
+        android:textSize="30dp" />
+
+    <EditText
+        android:id="@+id/et_groups"
+        android:layout_width="@dimen/authTextWidth"
+        android:layout_height="@dimen/authTextHeight"
+        android:layout_below="@id/et_surname"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/f3"
+        android:textColorHint="@color/f3"
+        android:hint="Номер группы"
+        android:textSize="30dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_password"
+        android:layout_below="@id/et_groups"
         android:layout_marginTop="20dp">
 
         <Button
