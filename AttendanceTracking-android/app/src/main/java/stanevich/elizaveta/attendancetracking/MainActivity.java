@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 
 import stanevich.elizaveta.attendancetracking.constants.AppConstants;
 import stanevich.elizaveta.attendancetracking.database.NotificationDbController;
+import stanevich.elizaveta.attendancetracking.database.SQLite;
 import stanevich.elizaveta.attendancetracking.model.NotificationModel;
 import stanevich.elizaveta.attendancetracking.services.GPSService;
 import stanevich.elizaveta.attendancetracking.services.OnLocationChanged;
@@ -38,6 +41,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private DatabaseReference mReference;
     private Toolbar toolbar;
+
+    private SQLite mSQLite;
+    SQLiteDatabase mSQLiteDatabase;
 
     FirebaseUser user = mAuth.getInstance().getCurrentUser();
 
@@ -59,6 +65,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         registration.setOnClickListener(this);
 
         ListUserTasks = new ArrayList<>();
+
+        mSQLite = new SQLite(this);
+        mSQLiteDatabase = mSQLite.getReadableDatabase();
 
         mReference = FirebaseDatabase.getInstance().getReference("attendancetracking-android");
     }
@@ -100,16 +109,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 roomLocation.setLongitude(30.207399);
                 final float accuracyMeters = 50.0f;
                 if (location.distanceTo(roomLocation) < accuracyMeters) {
-                    mReference.child(user.getUid()).child("Attendance").push().setValue("+").addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.d("mLog", task.isSuccessful() + "");
-                            Log.d("mLog", task.getException() + "");
-                        }
-                    });
+                    Cursor cursor = mSQLiteDatabase.query(SQLite.TABLE_NAME,
+                            null, null, null, null, null, null);
+                    if (cursor.moveToFirst()) {
+                        int surnameIndex = cursor.getColumnIndex(SQLite.STUDENT_SURNAME);
 
-                    Toast.makeText(MainActivity.this, "Вы зарегистрированы на занятии", Toast.LENGTH_SHORT).show();
-                    registration.setBackgroundColor(getResources().getColor(R.color.ff));
+                        mReference.child(user.getUid()).child("Attendance").push().setValue(cursor.getString(surnameIndex)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d("mLog", task.isSuccessful() + "");
+                                Log.d("mLog", task.getException() + "");
+                            }
+                        });
+
+                        Toast.makeText(MainActivity.this, "Вы зарегистрированы на занятии", Toast.LENGTH_SHORT).show();
+                        registration.setBackgroundColor(getResources().getColor(R.color.ff));
+                    }
                 } else {
                     registration.setBackgroundColor(getResources().getColor(R.color.f2));
                     Toast.makeText(MainActivity.this, "Вы не зарегистрированы на занятии, ваше местоположение не соответствует аудитории", Toast.LENGTH_SHORT).show();

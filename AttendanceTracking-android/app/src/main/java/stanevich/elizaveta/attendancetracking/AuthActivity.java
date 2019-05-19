@@ -45,6 +45,20 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         mSQLite = new SQLite(this);
         mSQLiteDatabase = mSQLite.getWritableDatabase();
 
+        Cursor cursor = mSQLiteDatabase.query(SQLite.TABLE_NAME,
+                null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                int surnameIndex = cursor.getColumnIndex(SQLite.STUDENT_SURNAME);
+                int groupIndex = cursor.getColumnIndex(SQLite.STUDENT_GROUP);
+                int loginIndex = cursor.getColumnIndex(SQLite.STUDENT_LOGIN);
+                int passwordIndex = cursor.getColumnIndex(SQLite.STUDENT_PASSWORD);
+
+                mETemail.setText(cursor.getString(loginIndex));
+                mETpassword.setText(cursor.getString(passwordIndex));
+                mETsurname.setText(cursor.getString(surnameIndex));
+                mETgroups.setText(cursor.getString(groupIndex));
+            }
+
         findViewById(R.id.btn_sign_in).setOnClickListener(this);
         findViewById(R.id.btn_registration).setOnClickListener(this);
 
@@ -63,19 +77,30 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        Cursor cursor = mSQLiteDatabase.query(SQLite.TABLE_NAME,
+                null, null, null, null, null, null);
         if (v.getId() == R.id.btn_sign_in) {
+            if(!cursor.moveToFirst()) {
+            saveDataInDB();
+            }
+            signIn(mETemail.getText().toString(), mETpassword.getText().toString());
+            showDataInLog(mSQLiteDatabase);
+        } else if (v.getId() == R.id.btn_registration) {
+            if(!cursor.moveToFirst()) {
+                saveDataInDB();
+            }
+            registration(mETemail.getText().toString(), mETpassword.getText().toString());
+        }
 
+    }
+
+    private void saveDataInDB() {
             ContentValues contentValues = new ContentValues();
             contentValues.put(SQLite.STUDENT_LOGIN,String.valueOf(mETemail.getText()));
             contentValues.put(SQLite.STUDENT_PASSWORD,String.valueOf(mETpassword.getText()));
             contentValues.put(SQLite.STUDENT_SURNAME, String.valueOf(mETsurname.getText()));
             contentValues.put(SQLite.STUDENT_GROUP, String.valueOf(mETgroups.getText()));
             mSQLiteDatabase.insert(SQLite.TABLE_NAME,null,contentValues);
-            showDataInLog(mSQLiteDatabase);
-            signIn(mETemail.getText().toString(), mETpassword.getText().toString());
-        } else if (v.getId() == R.id.btn_registration) {
-            registration(mETemail.getText().toString(), mETpassword.getText().toString());
-        }
 
     }
 
@@ -128,7 +153,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     public void registration(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this,
-                        getOnCompleteListener("Регистрация успешна", "Регистрация провалена"));
+                        getOnCompleteListener("Регистрация успешна", "Регистрация провалена, возможно необходимо увеличить пароль"));
 
     }
 }

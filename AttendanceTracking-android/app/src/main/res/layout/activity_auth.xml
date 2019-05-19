@@ -8,7 +8,7 @@
     tools:context=".AuthActivity">
 
     <EditText
-        android:text="liza@mail.ru"
+
         android:id="@+id/et_email"
         android:layout_width="@dimen/authTextWidth"
         android:layout_height="@dimen/authTextHeight"
@@ -21,7 +21,6 @@
 
 
     <EditText
-        android:text="123456"
         android:id="@+id/et_password"
         android:layout_width="@dimen/authTextWidth"
         android:layout_height="@dimen/authTextHeight"
