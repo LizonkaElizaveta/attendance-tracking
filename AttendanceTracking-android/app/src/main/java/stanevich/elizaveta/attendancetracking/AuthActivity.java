@@ -1,6 +1,9 @@
 package stanevich.elizaveta.attendancetracking;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,12 +19,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import stanevich.elizaveta.attendancetracking.database.NotificationDbController;
+import stanevich.elizaveta.attendancetracking.database.SQLite;
 
 
 public class AuthActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
 
-    private EditText mETemail, mETpassword;
+    private EditText mETemail, mETpassword, mETsurname, mETgroups;
+    private SQLite mSQLite;
+    SQLiteDatabase mSQLiteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,12 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
         mETemail = findViewById(R.id.et_email);
         mETpassword = findViewById(R.id.et_password);
+        mETgroups = findViewById(R.id.et_groups);
+        mETsurname = findViewById(R.id.et_surname);
+
+        mSQLite = new SQLite(this);
+        mSQLiteDatabase = mSQLite.getWritableDatabase();
+
         findViewById(R.id.btn_sign_in).setOnClickListener(this);
         findViewById(R.id.btn_registration).setOnClickListener(this);
 
@@ -52,11 +64,47 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_sign_in) {
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(SQLite.STUDENT_LOGIN,String.valueOf(mETemail.getText()));
+            contentValues.put(SQLite.STUDENT_PASSWORD,String.valueOf(mETpassword.getText()));
+            contentValues.put(SQLite.STUDENT_SURNAME, String.valueOf(mETsurname.getText()));
+            contentValues.put(SQLite.STUDENT_GROUP, String.valueOf(mETgroups.getText()));
+            mSQLiteDatabase.insert(SQLite.TABLE_NAME,null,contentValues);
+            showDataInLog(mSQLiteDatabase);
             signIn(mETemail.getText().toString(), mETpassword.getText().toString());
         } else if (v.getId() == R.id.btn_registration) {
             registration(mETemail.getText().toString(), mETpassword.getText().toString());
         }
 
+    }
+
+    public static void showDataInLog(SQLiteDatabase database) {
+        Cursor cursor = database.query(SQLite.TABLE_NAME,
+                null, null, null, null, null, null);
+        try {
+            if (cursor.moveToFirst()) {
+                int idIndex = cursor.getColumnIndex(SQLite.KEY_ID);
+                int surnameIndex = cursor.getColumnIndex(SQLite.STUDENT_SURNAME);
+                int groupIndex = cursor.getColumnIndex(SQLite.STUDENT_GROUP);
+                int loginIndex = cursor.getColumnIndex(SQLite.STUDENT_LOGIN);
+                int passwordIndex = cursor.getColumnIndex(SQLite.STUDENT_PASSWORD);
+
+
+                do {
+                    Log.d("mLog", "ID = " + cursor.getInt(idIndex) +
+                            " , login = " + cursor.getString(loginIndex) +
+                            " , password = " + cursor.getString(passwordIndex) +
+                            " , surname = " + cursor.getString(surnameIndex) +
+                            " , group = " + cursor.getString(groupIndex));
+                } while (cursor.moveToNext());
+
+            } else {
+                Log.d("mLog", "0 rows");
+            }
+        } finally {
+            cursor.close();
+        }
     }
 
     public void signIn(String email, String password) {
