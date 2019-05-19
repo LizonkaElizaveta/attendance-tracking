@@ -46,13 +46,6 @@ public class MainForm extends JFrame {
         pack();
         setVisible(true);
 
-        getRootPane().setDefaultButton(checkAtt);
-        checkAtt.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onPress();
-            }
-        });
-
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -154,7 +147,7 @@ public class MainForm extends JFrame {
                             int index = classesTable.getSelectedRow();
 
                             if (classSnapshot.child("discipline").getValue().toString().equals(disciplineComboBox.getSelectedItem().toString()) &&
-                                    classSnapshot.child("timestamp").getValue().toString().equals(model.getValueAt(index, 0))) {
+                                    classSnapshot.getKey().equals(model.getValueAt(index, 0))) {
                                 for (DataSnapshot groupSnapshot : classSnapshot.child("groups").getChildren()) {
                                     if (groupSnapshot.getKey().equals(model.getValueAt(index, 1).toString()))
                                         fillAttendanceList(groupSnapshot);
@@ -222,12 +215,37 @@ public class MainForm extends JFrame {
                 });
             }
         });
+
+        getRootPane().setDefaultButton(checkAtt);
+        checkAtt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addClass(ref.child("Classes"));
+            }
+        });
+    }
+
+    private void addClass(final DatabaseReference classesRef) {
+        Vector<String> disciplineList = new Vector<>();
+        for (int i = 0; i < disciplineComboBox.getModel().getSize(); ++i) {
+            disciplineList.add(disciplineComboBox.getItemAt(i).toString());
+        }
+        ClassCreator creator = new ClassCreator(disciplineList);
+        creator.pack();
+        creator.setVisible(true);
+
+        ClassCreator.Data data = creator.data;
+        if (!data.discipline.isEmpty() && !data.timestamp.isEmpty()) {
+            HashMap<String, Object> newClass = new HashMap<>();
+            newClass.put("discipline", data.discipline);
+            newClass.put("tracking", "true");
+            classesRef.child(data.timestamp).setValueAsync(newClass);
+        }
     }
 
     private void fillAttendanceList(DataSnapshot dataSnapshot) {
         DefaultListModel model = new DefaultListModel();
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-            model.addElement(snapshot.getKey());
+            model.addElement(snapshot.getValue().toString());
         }
         attendingStudentsList.setModel(model);
         if(attendingStudentsList.getVisibleRowCount() > 0)
@@ -242,7 +260,7 @@ public class MainForm extends JFrame {
             if (classSnapshot.child("discipline").getValue().toString().equals(disciplineComboBox.getSelectedItem().toString())) {
                 for (DataSnapshot groupSnapshot : classSnapshot.child("groups").getChildren()) {
                     Vector<String> row = new Vector<>();
-                    row.add(classSnapshot.child("timestamp").getValue().toString());
+                    row.add(classSnapshot.getKey());
                     row.add(groupSnapshot.getKey());
                     dtm.addRow(row);
                 }
@@ -264,9 +282,16 @@ public class MainForm extends JFrame {
                 for (DataSnapshot groupSnapshot : classSnapshot.child("groups").getChildren()) {
                     if (groupSnapshot.getKey().equals(group)) {
                         Vector<String> row = new Vector<>();
-                        String timestamp = classSnapshot.child("timestamp").getValue().toString();
+                        String timestamp = classSnapshot.getKey();
                         row.add(timestamp);
-                        if (groupSnapshot.hasChild(studentName)) {
+                        boolean studentAttended = false;
+                        for (DataSnapshot studentSnapshot : groupSnapshot.getChildren()) {
+                            if(studentSnapshot.getValue().toString().equals(studentName)) {
+                                studentAttended = true;
+                                break;
+                            }
+                        }
+                        if (studentAttended) {
                             row.add("+");
                         } else row.add("-");
                         model.addRow(row);
