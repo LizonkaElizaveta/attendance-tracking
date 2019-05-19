@@ -13,9 +13,11 @@ public class ClassCreator extends JDialog {
 
     Data data = new Data();
 
-    public ClassCreator(Vector<String> disciplineList) {
+    public ClassCreator(Vector<String> disciplineList, JFrame fr) {
+        super(fr,"Запуск проверки посещаемости",true);
         setContentPane(contentPane);
         setModal(true);
+        setLocation(200,100);
         getRootPane().setDefaultButton(buttonOK);
         for (String item : disciplineList) {
             disciplineComboBox.addItem(item);

@@ -37,7 +37,7 @@ public class MainForm extends JFrame {
 
     private PswDialogResponse AuthData;
     private PswDialogResponse AuthDB;
-    private LoginForm dialog = new LoginForm();
+    private LoginForm dialog = new LoginForm(this);
 
     public MainForm() {
         super("Main form");
@@ -67,6 +67,7 @@ public class MainForm extends JFrame {
         loginFormDatainitializing(ref);
         while (makeAuth(ref)) ;
         userNameUpdate(ref);
+
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -229,7 +230,7 @@ public class MainForm extends JFrame {
         for (int i = 0; i < disciplineComboBox.getModel().getSize(); ++i) {
             disciplineList.add(disciplineComboBox.getItemAt(i).toString());
         }
-        ClassCreator creator = new ClassCreator(disciplineList);
+        ClassCreator creator = new ClassCreator(disciplineList, this);
         creator.pack();
         creator.setVisible(true);
 
@@ -239,6 +240,12 @@ public class MainForm extends JFrame {
             newClass.put("discipline", data.discipline);
             newClass.put("tracking", "true");
             classesRef.child(data.timestamp).setValueAsync(newClass);
+            TimerDialog dialog = new TimerDialog(this);
+            dialog.pack();
+            dialog.setLocation(200,100);
+            dialog.setVisible(true);
+            classesRef.child(data.timestamp).child("tracking").setValueAsync("false");
+
         }
     }
 
@@ -321,6 +328,7 @@ public class MainForm extends JFrame {
 
 
         dialog.pack();
+        dialog.setLocation(200,100);
         dialog.setVisible(true);
         AuthData = new PswDialogResponse(dialog.GetResponse());
         if (AuthDB.getPassword().equals(AuthData.getPassword())) status = false;
