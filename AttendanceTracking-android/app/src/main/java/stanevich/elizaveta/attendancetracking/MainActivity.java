@@ -113,8 +113,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             null, null, null, null, null, null);
                     if (cursor.moveToFirst()) {
                         int surnameIndex = cursor.getColumnIndex(SQLite.STUDENT_SURNAME);
+                        int groupIndex = cursor.getColumnIndex(SQLite.STUDENT_GROUP);
 
-                        mReference.child(user.getUid()).child("Attendance").push().setValue(cursor.getString(surnameIndex)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        mReference.child("Classes").child("1").child("groups").
+                                child(cursor.getString(groupIndex)).child(user.getUid()).setValue(cursor.getString(surnameIndex)).
+                                addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Log.d("mLog", task.isSuccessful() + "");
@@ -124,6 +127,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                         Toast.makeText(MainActivity.this, "Вы зарегистрированы на занятии", Toast.LENGTH_SHORT).show();
                         registration.setBackgroundColor(getResources().getColor(R.color.ff));
+                        registration.setEnabled(false);
                     }
                 } else {
                     registration.setBackgroundColor(getResources().getColor(R.color.f2));
