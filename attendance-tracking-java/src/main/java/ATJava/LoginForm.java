@@ -20,8 +20,8 @@ public class LoginForm extends JDialog {
     private static final int LoginPoliticMinLength = 5;
     private static final int LoginPoliticMaxLength = 30;
 
-    public LoginForm() {
-
+    public LoginForm(JFrame fr) {
+        super(fr,"Авторизация", true);
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(loginButton);
