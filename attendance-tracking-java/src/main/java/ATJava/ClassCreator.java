@@ -10,6 +10,8 @@ public class ClassCreator extends JDialog {
     private JButton buttonCancel;
     private JComboBox disciplineComboBox;
     private JTextField timestampTextField;
+    private JTextField latitudeTextField;
+    private JTextField longitudeTextField;
 
     Data data = new Data();
 
@@ -54,6 +56,8 @@ public class ClassCreator extends JDialog {
     public class Data {
         String discipline;
         String timestamp;
+        String latitude;
+        String longitude;
     }
 
 
@@ -61,6 +65,8 @@ public class ClassCreator extends JDialog {
         if (checkCorrectness()) {
             data.discipline = disciplineComboBox.getSelectedItem().toString();
             data.timestamp = timestampTextField.getText();
+            data.latitude = latitudeTextField.getText();
+            data.longitude = longitudeTextField.getText();
             dispose();
         }
     }
