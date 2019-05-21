@@ -27,6 +27,12 @@
               <text value="Проверить посещаемость"/>
             </properties>
           </component>
+          <component id="d4740" class="javax.swing.JButton" binding="sendNotificationButton">
+            <constraints/>
+            <properties>
+              <text value="Отправить уведомление"/>
+            </properties>
+          </component>
         </children>
       </toolbar>
       <grid id="8d79a" binding="centralPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

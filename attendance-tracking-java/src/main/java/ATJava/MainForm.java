@@ -1,9 +1,18 @@
 package ATJava;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.ExportedUserRecord;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.ListUsersPage;
 import com.google.firebase.database.*;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.*;
+import com.google.firebase.iid.*;
+import com.google.gson.JsonObject;
 
 
 import javax.swing.*;
@@ -12,12 +21,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.event.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
 
 
 public class MainForm extends JFrame {
@@ -34,6 +41,7 @@ public class MainForm extends JFrame {
     private JButton makeReportButton;
     private JList attendingStudentsList;
     private JTable classesTable;
+    private JButton sendNotificationButton;
 
     private PswDialogResponse AuthData;
     private PswDialogResponse AuthDB;
@@ -238,14 +246,15 @@ public class MainForm extends JFrame {
         if (!data.discipline.isEmpty() && !data.timestamp.isEmpty()) {
             HashMap<String, Object> newClass = new HashMap<>();
             newClass.put("discipline", data.discipline);
+            newClass.put("latitude", data.latitude);
+            newClass.put("longitude", data.longitude);
             newClass.put("tracking", "true");
             classesRef.child(data.timestamp).setValueAsync(newClass);
             TimerDialog dialog = new TimerDialog(this);
             dialog.pack();
-            dialog.setLocation(200,100);
+            dialog.setLocation(200, 100);
             dialog.setVisible(true);
             classesRef.child(data.timestamp).child("tracking").setValueAsync("false");
-
         }
     }
 
@@ -255,7 +264,7 @@ public class MainForm extends JFrame {
             model.addElement(snapshot.getValue().toString());
         }
         attendingStudentsList.setModel(model);
-        if(attendingStudentsList.getVisibleRowCount() > 0)
+        if (attendingStudentsList.getVisibleRowCount() > 0)
             attendingStudentsList.setSelectedIndex(0);
     }
 
@@ -274,7 +283,7 @@ public class MainForm extends JFrame {
             }
         }
         classesTable.setModel(dtm);
-        if(classesTable.getRowCount() > 0)
+        if (classesTable.getRowCount() > 0)
             classesTable.setRowSelectionInterval(0, 0);
     }
 
@@ -293,7 +302,7 @@ public class MainForm extends JFrame {
                         row.add(timestamp);
                         boolean studentAttended = false;
                         for (DataSnapshot studentSnapshot : groupSnapshot.getChildren()) {
-                            if(studentSnapshot.getValue().toString().equals(studentName)) {
+                            if (studentSnapshot.getValue().toString().equals(studentName)) {
                                 studentAttended = true;
                                 break;
                             }
@@ -328,7 +337,7 @@ public class MainForm extends JFrame {
 
 
         dialog.pack();
-        dialog.setLocation(200,100);
+        dialog.setLocation(200, 100);
         dialog.setVisible(true);
         AuthData = new PswDialogResponse(dialog.GetResponse());
         if (AuthDB.getPassword().equals(AuthData.getPassword())) status = false;
